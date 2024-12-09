@@ -22,4 +22,11 @@ iv)Simulated circuit:
 
 
 
+v)Video:
+
+vi)Gerber file:
+![Annotation 2024-12-09 113249](https://github.com/user-attachments/assets/6821094a-9959-4c85-a728-d9591763d8bd)
+
+
+
 
