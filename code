@@ -1,0 +1,92 @@
+#include <LiquidCrystal.h>
+
+const int TRIGGER_PIN = 12;
+const int ECHO_PIN = 13;
+const int LED_PIN = 9;
+const int LED_PIN2=7;
+const int LED_PIN3=6;
+const int BUZZER_PIN = 8;
+const int PUMP_PIN=10;
+
+// Define the distance threshold
+const float DISTANCE_THRESHOLD = 10; // cm
+
+LiquidCrystal lcd(11, 5, 4, 3, 2, A4);
+
+void setup() {
+  // Set the pins as outputs
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(LED_PIN2, OUTPUT);
+  pinMode(LED_PIN3, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(PUMP_PIN, OUTPUT);	
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Measure the distance to the sludge level
+  float distance = measureDistance();
+
+  // Check if the distance is less than the threshold
+  if (distance < DISTANCE_THRESHOLD) {
+
+    digitalWrite(LED_PIN2, LOW);
+    digitalWrite(LED_PIN3, LOW);
+    digitalWrite(PUMP_PIN, HIGH);
+    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(BUZZER_PIN, HIGH);//give some delay about 200ms
+    delay(1000);
+    digitalWrite(BUZZER_PIN, LOW);
+    delay(1000);
+    //printing the values
+    lcd.clear();
+    lcd.print("Under 10cm:");
+    lcd.print(distance);
+    Serial.println("The Water level is Under 10cm: ");
+    Serial.println(distance);
+  } else if(distance < 20) {
+    digitalWrite(LED_PIN, LOW);
+  	digitalWrite(LED_PIN2, HIGH);
+    digitalWrite(LED_PIN3, LOW);
+    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(PUMP_PIN, LOW);
+    lcd.clear();
+    lcd.print("10cm & 20cm:");
+    lcd.print(distance);
+    Serial.println("The Water level is b/w 10cm and 20cm: ");
+    Serial.println(distance);
+  } else {
+  
+    digitalWrite(LED_PIN, LOW);
+    digitalWrite(LED_PIN2, LOW);
+    digitalWrite(LED_PIN3,HIGH);
+    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(PUMP_PIN, LOW);
+    lcd.clear();
+    lcd.print("Above 20cm: ");
+    lcd.print(distance);
+    Serial.println("The Water level is above 20cm: ");
+    Serial.println(distance);
+    
+  }
+
+  // Delay for 1 second
+  delay(1000);
+}
+
+float measureDistance() {
+  // Send a pulse on the trigger pin
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN, LOW);
+
+  // Measure the time it takes for the pulse to return
+  long pulseDuration = pulseIn(ECHO_PIN, HIGH);
+
+  // Calculate the distance
+  float distance = pulseDuration * 0.034 / 2.0; // cm
+
+  return distance;
+}
