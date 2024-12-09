@@ -19,8 +19,7 @@ iii) Required components to develop solutions:
 *Breadboard and wires
 
 iv)Simulated circuit:
-
-
+![image](https://github.com/user-attachments/assets/6fc61135-cca2-4f41-a3aa-111f1750288e)
 
 v)Video:
 
